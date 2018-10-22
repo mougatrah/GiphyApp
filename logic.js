@@ -32,7 +32,7 @@ $(document).ready(function () {
           
           for (let i in results) {
             var gifDiv = $("<div>");
-            gifDiv.addClass("col-sm-6 col-lg-4");
+            gifDiv.addClass("text-center col-sm-6 col-lg-4");
 
             var rating = results[i].rating;
 
