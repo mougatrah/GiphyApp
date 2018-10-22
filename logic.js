@@ -14,56 +14,62 @@ $(document).ready(function () {
       }
   }
 
-  $(document).on("click", '.term', function () {
-
+  $(document).on("click", '.term', function (e) {
+    e.preventDefault();
     $("#gifs").empty();
     var type = $(this).attr("data-type").replace(" ", "+");
-    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=SjmJV3il6iVd57sR2lh8nvnaRVFGzvtM&limit=" + $("#limit").val();
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=SjmJV3il6iVd57sR2lh8nvnaRVFGzvtM&limit=" + $("#limit").val();
     console.log(queryURL);
     $.ajax({
       url: queryURL,
       method: "GET"
     })
       .then(function(response) {
+  
         var results = response.data;
-       
+        console.log(results);
+        if(results.length != 0){
+          
+          for (let i in results) {
+            var gifDiv = $("<div>");
+            gifDiv.addClass("col-sm-6 col-lg-4");
+
+            var rating = results[i].rating;
+
+            var p = $("<p>").text("Rating: " + rating).addClass("border");
+
+
+            var animated = results[i].images.fixed_height.url;
+            var still = results[i].images.fixed_height_still.url;
+
+            var gif = $("<img>");
+            gif.attr(
+                {
+                    "src": still,
+                    "data-still": still,
+                    "data-animate": animated,
+                    "data-state": "still"
+                }
+            );
+            gif.addClass("gif img-fluid");
+
+
+            gifDiv.append(gif);
+            gifDiv.append(p);
+
+            $("#gifs").append(gifDiv);
+        
+}
+        }else{
+          $("#gifs").html("<h1>No gifs found</h1>");
+        }
         
 
-                for (let i in results) {
-                    var gifDiv = $("<div>");
-                    gifDiv.addClass("col-sm-6 col-lg-4");
-
-                    var rating = results[i].rating;
-
-                    var p = $("<p>").text("Rating: " + rating).addClass("border");
-
-
-                    var animated = results[i].images.fixed_height.url;
-                    var still = results[i].images.fixed_height_still.url;
-
-                    var gif = $("<img>");
-                    gif.attr(
-                        {
-                            "src": still,
-                            "data-still": still,
-                            "data-animate": animated,
-                            "data-state": "still"
-                        }
-                    );
-                    gif.addClass("gif img-fluid");
-
-
-                    gifDiv.append(gif);
-                    gifDiv.append(p);
-
-                    $("#gifs").append(gifDiv);
-                
-        }
       });
   });
 
-  $(document).on("click", ".gif", function() {
-
+  $(document).on("click", ".gif", function(e) {
+    e.preventDefault();
     var state = $(this).attr("data-state");
 
     if (state === "still") {
@@ -76,7 +82,8 @@ $(document).ready(function () {
     }
   });
 
-$("#stop").on('click', function(){
+$(".stop").on('click', function(e){
+  e.preventDefault();
   console.log("Stopping");
   console.log($(".gif").eq());
  
@@ -89,7 +96,8 @@ $("#stop").on('click', function(){
 
 });
 
-  $("#theme").on("click", function(){
+  $("#theme").on("click", function(e){
+    e.preventDefault();
     if($("body").hasClass("bg-light")){
       $(this).text("Light Theme")
       $("body").removeClass("bg-light text-dark").addClass("bg-dark text-white");
@@ -99,8 +107,8 @@ $("#stop").on('click', function(){
     }
   });
   
-  $("#add-button").on("click", function(event) {
-    event.preventDefault();
+  $("#add-button").on("click", function(e) {
+    e.preventDefault();
     var newTerm = $("#input").val().toLowerCase();
 
     if (newTerm.length > 2 && !terms.includes(newTerm)) {
