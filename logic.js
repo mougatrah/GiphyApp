@@ -16,18 +16,18 @@ $(document).ready(function () {
 
   $(document).on("click", '.term', function (e) {
     e.preventDefault();
-    $("#gifs").empty();
+    
     var type = $(this).attr("data-type").replace(" ", "+");
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=SjmJV3il6iVd57sR2lh8nvnaRVFGzvtM&limit=" + $("#limit").val();
-    console.log(queryURL);
+  
     $.ajax({
       url: queryURL,
       method: "GET"
     })
       .then(function(response) {
-  
+        $("#gifs").empty();
         var results = response.data;
-        console.log(results);
+    
         if(results.length != 0){
           
           for (let i in results) {
@@ -84,8 +84,7 @@ $(document).ready(function () {
 
 $(".stop").on('click', function(e){
   e.preventDefault();
-  console.log("Stopping");
-  console.log($(".gif").eq());
+
  
   $(".gif").each(function(i, obj){
     $(this).attr("src", $(this).attr("data-still"));
