@@ -32,30 +32,43 @@ $(document).ready(function () {
           
           for (let i in results) {
             var gifDiv = $("<div>");
-            gifDiv.addClass("text-center col-sm-6 col-lg-4");
+            gifDiv.addClass("text-center col-sm-6 col-lg-4 border");
 
             var rating = results[i].rating;
-
-            var p = $("<p>").text("Rating: " + rating).addClass("border");
-
-
+            var top = $("<div>").addClass("row justify-content-center");
+            var bottom = $("<div>").addClass("row");
+              
             var animated = results[i].images.fixed_height.url;
             var still = results[i].images.fixed_height_still.url;
+            
+            var gif = $("<img>").attr(
+              {
+                  "src": still,
+                  "data-still": still,
+                  "data-animate": animated,
+                  "data-state": "still"
+              }
+          ).addClass("gif");
 
-            var gif = $("<img>");
-            gif.attr(
-                {
-                    "src": still,
-                    "data-still": still,
-                    "data-animate": animated,
-                    "data-state": "still"
-                }
-            );
-            gif.addClass("gif img-fluid");
+            var p = $("<button>").text("Rating: " + rating).addClass("btn btn-outline-secondary active col-6");
+            var d = $("<button>").text("Save").addClass("btn btn-outline-secondary col-6");
 
+            d.click(function(){
+              download(results[i].images.original.url, results[i].title);
+             });
 
-            gifDiv.append(gif);
-            gifDiv.append(p);
+           
+         
+
+           top.append(gif);
+           bottom.append(p);
+           bottom.append(d);
+ 
+   
+
+            gifDiv.append(top);
+            gifDiv.append(bottom);
+           
 
             $("#gifs").append(gifDiv);
         
@@ -114,7 +127,7 @@ $(".stop").on('click', function(e){
       terms.unshift(newTerm);
       terms.pop();
     }else{
-      alert("invalid term");
+      alert("Pick another term.");
     }
 
     addButtons();
